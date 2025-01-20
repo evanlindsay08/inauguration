@@ -16,6 +16,23 @@ const io = new Server(httpServer, {
 const chatHistory: string[] = [];
 const HISTORY_LIMIT = 100; // Keep last 100 messages
 
+// Banned words list
+const bannedWords = [
+  'rug', 'rugged', 'rugging',
+  'scam', 'scammed', 'scammer', 'scamming',
+  'bundle', 'bundled', 'bundling'
+];
+
+// Function to check if message contains banned words
+function containsBannedWords(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  return bannedWords.some(word => 
+    lowerMessage.includes(word.toLowerCase()) ||
+    // Check for variations with special characters
+    lowerMessage.replace(/[^a-zA-Z]/g, '').includes(word)
+  );
+}
+
 app.use(express.static(path.join(__dirname, '../public')));
 
 io.on('connection', (socket) => {
@@ -30,6 +47,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat message', (msg: string) => {
+    // Check for banned words
+    if (containsBannedWords(msg)) {
+      // Send private message back to sender only
+      socket.emit('chat message', 'Message not sent: Contains prohibited words');
+      return;
+    }
+
     // Store message in history
     chatHistory.push(msg);
     if (chatHistory.length > HISTORY_LIMIT) {
