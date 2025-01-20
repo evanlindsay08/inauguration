@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OFFICIAL INAUGURATION LIVE</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="images/image.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OFFICIAL INAUGURATION LIVE</h1>
+        </header>
+        
+        <main>
+            <div class="video-container">
+                <div id="player">
+                    <iframe width="100%" height="100%" 
+                            src="https://www.youtube.com/embed/ZOLZGyur5t0?modestbranding=1&rel=0&showinfo=0&fs=0&iv_load_policy=3" 
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            style="border: none;"
+                            id="youtube-player"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="loading-message">Please allow a few seconds for the video and audio to properly load.</div>
+            </div>
+
+            <div class="chat-container">
+                <div id="messages"></div>
+                <form id="chat-form">
+                    <input type="text" id="message-input" placeholder="Type your message...">
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </main>
+
+        <div class="contract-box">
+            <h3>Contract Address</h3>
+            <div class="copy-container">
+                <input type="text" value="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" id="contractAddress" readonly>
+                <button onclick="copyAddress()" id="copyButton">Copy</button>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+    <script>
+        // Load YouTube API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                events: {
+                    'onReady': function(event) {
+                        event.target.playVideo();
+                        // Unmute after a short delay
+                        setTimeout(() => {
+                            event.target.unMute();
+                            event.target.setVolume(100);
+                        }, 1000);
+                        // Check video state periodically
+                        setInterval(() => {
+                            if (player.getPlayerState() !== 1) { // 1 is playing state
+                                player.playVideo();
+                                player.unMute();
+                                player.setVolume(100);
+                            }
+                        }, 3000);
+                    },
+                    'onStateChange': function(event) {
+                        if (event.data !== 1) { // If not playing
+                            player.playVideo();
+                            player.unMute();
+                            player.setVolume(100);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Preload the video
+        window.addEventListener('load', function() {
+            var tempVideo = document.createElement('video');
+            tempVideo.preload = 'auto';
+            tempVideo.src = 'https://www.youtube.com/embed/ZOLZGyur5t0';
+        });
+
+        function copyAddress() {
+            const contractAddress = document.getElementById('contractAddress');
+            contractAddress.select();
+            document.execCommand('copy');
+            
+            const copyButton = document.getElementById('copyButton');
+            copyButton.textContent = 'Copied!';
+            setTimeout(() => {
+                copyButton.textContent = 'Copy';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
