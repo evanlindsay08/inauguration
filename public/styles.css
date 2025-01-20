@@ -103,20 +103,25 @@ body::after {
 header {
     background-color: var(--color-red);
     color: var(--color-white);
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+header h1 {
+    font-size: 24px;
+    margin: 0;
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-weight: bold;
 }
 
 main {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 20px;
+    margin-bottom: 20px;
 }
 
 .video-container {
@@ -129,7 +134,7 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 600px;
+    min-height: 500px;
 }
 
 #player {
@@ -153,7 +158,7 @@ main {
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    height: 600px;
+    height: 500px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
@@ -250,10 +255,11 @@ button:active {
     border: 2px solid var(--color-red);
     border-radius: 8px;
     padding: 30px;
-    margin-top: 20px;
+    margin-top: 0;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     text-align: center;
     width: 100%;
+    clear: both;
 }
 
 .contract-box h3 {
